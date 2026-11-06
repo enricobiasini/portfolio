@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enrico Biasini — System Integrator &amp; Informatica UniPD</title>
+    <meta name="description" content="Portfolio personale di Enrico Biasini, System Integrator presso Team Building S.r.l. a Padova e studente di Informatica presso l'Università degli Studi di Padova (UniPD).">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        carbon: {
+                            bg: '#0a0a0a',
+                            surface: '#111113',
+                            card: '#121214',
+                            border: '#1f1f22',
+                            muted: '#68686e',
+                            secondary: '#9a9aa2',
+                            cream: '#f2f2ee'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0a0a0a;
+            color: #f5f5f5;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, .font-display {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.03em;
+        }
+
+        .font-mono-label {
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.12em;
+        }
+
+        /* Marquee Ticker Animation */
+        @keyframes marqueeScroll {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            display: flex;
+            width: max-content;
+            animation: marqueeScroll 34s linear infinite;
+        }
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
+
+        /* Row Inversion on Hover */
+        .task-row {
+            background-color: #0a0a0a;
+            color: #f5f5f5;
+            transition: background-color 0.22s ease, color 0.22s ease, padding-left 0.22s ease;
+        }
+        .task-row:hover {
+            background-color: #f2f2ee;
+            color: #0a0a0a;
+        }
+        .task-row:hover .row-number,
+        .task-row:hover .row-desc,
+        .task-row:hover .row-tag,
+        .task-row:hover .row-arrow {
+            color: #0a0a0a !important;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272a;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3f3f46;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-[#f2f2ee] selection:text-[#0a0a0a]">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed top-20 right-6 z-50 bg-[#f2f2ee] text-[#0a0a0a] px-4 py-2.5 text-xs font-mono-label uppercase shadow-xl border border-white transition-all">
+        <span id="toast-message"></span>
+    </div>
+
+    <!-- ================= TOP NAVBAR ================= -->
+    <header class="sticky top-0 z-40 bg-[#0a0a0a]/95 backdrop-blur-md border-b border-[#1f1f22]">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-8 h-16 flex items-center justify-between gap-4">
+
+            <!-- Left: Monogram 'B' & Name -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-7 h-7 border border-[#2e2e32] bg-[#121214] flex items-center justify-center font-display font-extrabold text-xs text-white group-hover:bg-[#f2f2ee] group-hover:text-[#0a0a0a] transition">
+                    B
+                </div>
+                <span class="font-mono-label text-xs font-semibold uppercase text-white tracking-widest">ENRICO BIASINI</span>
+            </a>
+
+            <!-- Center: Navigation Links -->
+            <nav class="hidden lg:flex items-center gap-7 font-mono-label text-[11px] uppercase text-[#8e8e96]">
+                <a href="#chi-sono" class="hover:text-white transition">CHI SONO</a>
+                <a href="#esperienze" class="hover:text-white transition">ESPERIENZE</a>
+                <a href="#formazione" class="hover:text-white transition">FORMAZIONE</a>
+                <a href="#competenze" class="hover:text-white transition">COMPETENZE</a>
+                <a href="#progetti" class="hover:text-white transition">PROGETTI</a>
+                <a href="#contatti" class="hover:text-white transition">CONTATTI</a>
+            </nav>
+
+            <!-- Right: Live Clock + LinkedIn -->
+            <div class="flex items-center gap-3 sm:gap-4">
+                <div class="hidden sm:flex items-center gap-2 font-mono-label text-[11px] text-[#8e8e96]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    <span>PADOVA</span>
+                    <span id="live-clock" class="text-[#d4d4d8]">--:--:--</span>
+                </div>
+
+                <a href="https://www.linkedin.com/in/enrico-biasini-38a989318/" target="_blank" rel="noopener noreferrer" class="font-mono-label text-[11px] uppercase px-3.5 py-2 border border-[#d4d4d8] text-white hover:bg-[#f2f2ee] hover:text-[#0a0a0a] transition flex items-center gap-1.5">
+                    <span>LINKEDIN</span>
+                    <span>↗</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Sub-header Technical Strip -->
+        <div class="border-t border-[#1f1f22] bg-[#0a0a0a]">
+            <div class="max-w-[1400px] mx-auto px-4 sm:px-8 py-2.5 grid grid-cols-1 sm:grid-cols-3 items-center gap-2 font-mono-label text-[10px] uppercase text-[#68686e]">
+                <div class="flex items-center gap-2">
+                    <span>BUILDING AUTOMATION &amp; IT</span>
+                    <span class="text-[#d4d4d8] font-medium">• PADOVA</span>
+                </div>
+                <div class="sm:text-center text-[#8e8e96]">
+                    SYSTEM INTEGRATOR &amp; DEVELOPER
+                </div>
+                <div class="sm:text-right">
+                    <a href="#esperienze" class="hover:text-white transition">TEAM BUILDING SRL • UNIPD ↗</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- ================= HERO SECTION ================= -->
+        <section class="border-b border-[#1f1f22]">
+            <div class="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12">
+
+                <!-- Left Column (7 cols) -->
+                <div class="lg:col-span-7 px-4 sm:px-8 py-14 sm:py-20 lg:py-24 lg:border-r border-[#1f1f22] flex flex-col justify-between">
+                    <div>
+                        <!-- Small Mono Label -->
+                        <div class="flex items-center gap-2 font-mono-label text-[11px] uppercase text-[#8e8e96] mb-6">
+                            <span class="w-1.5 h-1.5 rounded-full bg-[#d4d4d8]"></span>
+                            <span>SYSTEM INTEGRATOR • BMS • KNX • INFORMATICA UNIPD</span>
+                        </div>
+
+                        <!-- Large Heading -->
+                        <h1 class="font-display font-extrabold text-5xl sm:text-6xl lg:text-[72px] leading-[1.04] tracking-tight text-white">
+                            Sono Enrico<br>
+                            Biasini
+                        </h1>
+
+                        <!-- Presentation Paragraph -->
+                        <p class="mt-7 text-base sm:text-lg text-[#9a9aa2] max-w-2xl leading-relaxed font-normal">
+                            Ho 21 anni, lavoro come <strong class="text-white font-semibold">System Integrator</strong> presso <strong class="text-white font-semibold">Team Building S.r.l.</strong> a Padova e frequento il terzo anno di <strong class="text-white font-semibold">Informatica</strong> all’Università degli Studi di Padova. Unisco lo sviluppo software alla gestione e integrazione di edifici intelligenti.
+                        </p>
+
+                        <!-- Action Buttons -->
+                        <div class="mt-9 flex flex-wrap items-center gap-3.5">
+                            <a href="#esperienze" class="font-mono-label text-[11px] uppercase px-5 py-3.5 bg-[#f2f2ee] text-[#0a0a0a] font-semibold hover:bg-white transition flex items-center gap-2">
+                                <span>ESPLORA ESPERIENZE</span>
+                                <span>↓</span>
+                            </a>
+                            <a href="https://www.linkedin.com/in/enrico-biasini-38a989318/" target="_blank" rel="noopener noreferrer" class="font-mono-label text-[11px] uppercase px-5 py-3.5 border border-[#2e2e32] text-white hover:border-white transition flex items-center gap-2">
+                                <span>PROFILO LINKEDIN</span>
+                                <span>↗</span>
+                            </a>
+                            <a href="cv-enrico-biasini.pdf" download="CV-Enrico-Biasini.pdf" class="font-mono-label text-[11px] uppercase px-5 py-3.5 border border-[#2e2e32] text-white hover:border-white transition flex items-center gap-2">
+                                <span>SCARICA CV</span>
+                                <span>↓</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Quick Icon Links Row -->
+                    <div class="mt-14 pt-8 border-t border-[#1f1f22]/60">
+                        <div class="font-mono-label text-[10px] uppercase text-[#68686e] mb-3">RIFERIMENTI RAPIDI</div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <a href="https://www.linkedin.com/in/enrico-biasini-38a989318/" target="_blank" rel="noopener noreferrer" title="LinkedIn" class="w-10 h-10 border border-[#242428] bg-[#0f0f11] hover:border-white hover:bg-[#f2f2ee] hover:text-[#0a0a0a] transition flex items-center justify-center text-xs font-mono-label font-semibold">
+                                in
+                            </a>
+                            <button onclick="copyEmailAddress()" title="Copia Email" class="w-10 h-10 border border-[#242428] bg-[#0f0f11] hover:border-white hover:bg-[#f2f2ee] hover:text-[#0a0a0a] transition flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="w-4 h-4"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect></svg>
+                            </button>
+                            <a href="#esperienze" title="BMS &amp; Automazione" class="w-10 h-10 border border-[#242428] bg-[#0f0f11] hover:border-white hover:bg-[#f2f2ee] hover:text-[#0a0a0a] transition flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="w-4 h-4"><path d="M12 20v2"></path><path d="M12 2v2"></path><path d="M17 20v2"></path><path d="M17 2v2"></path><path d="M2 12h2"></path><path d="M2 17h2"></path><path d="M2 7h2"></path><path d="M20 12h2"></path><path d="M20 17h2"></path><path d="M20 7h2"></path><path d="M7 20v2"></path><path d="M7 2v2"></path><rect x="4" y="4" width="16" height="16" rx="2"></rect><rect x="8" y="8" width="8" height="8" rx="1"></rect></svg>
+                            </a>
+                            <a href="#formazione" title="Informatica UniPD" class="w-10 h-10 border border-[#242428] bg-[#0f0f11] hover:border-white hover:bg-[#f2f2ee] hover:text-[#0a0a0a] transition flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="w-4 h-4"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column (5 cols): Minimalist Terminal Box -->
+                <div class="lg:col-span-5 px-4 sm:px-8 py-14 sm:py-20 lg:py-24 bg-[#0c0c0e] relative overflow-hidden flex flex-col justify-between min-h-[380px]">
+
+                    <!-- Giant Subtle 'B' Watermark -->
+                    <div aria-hidden="true" class="pointer-events-none select-none absolute -right-6 bottom-6 font-display font-extrabold text-[240px] leading-none text-white/[0.03]">
+                        B
+                    </div>
+
+                    <!-- Terminal Output Lines -->
+                    <div class="relative z-10 font-mono text-xs sm:text-[13px] space-y-2.5 leading-relaxed">
+                        <div class="text-[#787880]">
+                            <span class="text-[#52525b]">&gt;</span> whoami
+                        </div>
+                        <div class="text-white font-semibold">
+                            <span class="text-[#52525b]">&gt;</span> Enrico Biasini
+                        </div>
+                        <div class="text-[#9a9aa2]">
+                            <span class="text-[#52525b]">&gt;</span> role <span class="text-white font-medium">system integrator @ Team Building Srl</span>
+                        </div>
+                        <div class="text-[#9a9aa2]">
+                            <span class="text-[#52525b]">&gt;</span> study <span class="text-white font-medium">informatica (3° anno) @ UniPD</span>
+                        </div>
+                        <div class="text-[#9a9aa2]">
+                            <span class="text-[#52525b]">&gt;</span> diploma <span class="text-white font-medium">ITI Francesco Severi • Padova</span>
+                        </div>
+                        <div class="text-[#9a9aa2]">
+                            <span class="text-[#52525b]">&gt;</span> mail <span class="text-white font-medium">enrico.biasini97@gmail.com</span>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Terminal Footer Line -->
+                    <div class="relative z-10 pt-4 mt-12 border-t border-[#1f1f22] flex items-center justify-between font-mono-label text-[10px] uppercase text-[#68686e]">
+                        <span>// TERMINAL</span>
+                        <span>V.2026</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Marquee / Ticker Strip -->
+            <div class="border-t border-[#1f1f22] bg-[#0a0a0a] py-3.5 overflow-hidden">
+                <div class="animate-marquee flex items-center gap-10">
+                    <div class="flex items-center gap-10 shrink-0 font-mono-label text-[11px] uppercase">
+                        <span class="text-[#68686e]">FOCUS OPERATIVO</span>
+                        <span class="text-white font-semibold">PROGRAMMAZIONE KNX</span>
+                        <span class="text-[#3f3f46]">•</span>
+                        <span class="text-[#68686e]">SUPERVISIONE</span>
+                        <span class="text-white font-semibold">BMS SCHNEIDER ELECTRIC</span>
+                        <span class="text-[#3f3f46]">•</span>
+                        <span class="text-[#68686e]">PROTOCOLLI DI CAMPO</span>
+                        <span class="text-white font-semibold">MODBUS • BACNET • DALI</span>
+                        <span class="text-[#3f3f46]">•</span>
+                        <span class="text-[#68686e]">UNIVERSITÀ</span>
+                        <span class="text-white font-semibold">INFORMATICA UNIPD</span>
+                        <span class="text-[#3f3f46]">•</span>
+                        <span class="text-[#68686e]">AZIENDA</span>
+                        <span class="text-white font-semibold">TEAM BUILDING SRL</span>
+                        <span class="text-[#3f3f46]">•</span>
+                        <span class="text-[#68686e]">ATTIVITÀ IN CAMPO</span>
+                        <span class="text-white font-semibold">COLLAUDO &amp; COMMISSIONING</span>
+                        <span class="text-[#3f3f46]">•</span>
+                    </div>
+                    <!-- Duplicate for seamless loop -->
+                    <div class="flex items-center gap-10 shrink-0 font-mono-label text-[11px] uppercase" aria-hidden="true">
+                        <span class="text-[#68686e]">FOCUS OPERATIVO</span>
+                        <span class="text-white font-semibold">PROGRAMMAZIONE KNX</span>
+                        <span class="text-[#3f3f46]">•</span>
+                        <span class="text-[#68686e]">SUPERVISIONE</span>
+                        <span class="text-white font-semibold">BMS SCHNEIDER ELECTRIC</span>
+                        <span class="text-[#3f3f46]">•</span>
+                        <span class="text-[#68686e]">PROTOCOLLI DI CAMPO</span>
+                        <span class="text-white font-semibold">MODBUS • BACNET • DALI</span>
+                        <span class="text-[#3f3f46]">•</span>
+                        <span class="text-[#68686e]">UNIVERSITÀ</span>
+                        <span class="text-white font-semibold">INFORMATICA UNIPD</span>
+                        <span class="text-[#3f3f46]">•</span>
+                        <span class="text-[#68686e]">AZIENDA</span>
+                        <span class="text-white font-semibold">TEAM BUILDING SRL</span>
+                        <span class="text-[#3f3f46]">•</span>
+                        <span class="text-[#68686e]">ATTIVITÀ IN CAMPO</span>
+                        <span class="text-white font-semibold">COLLAUDO &amp; COMMISSIONING</span>
+                        <span class="text-[#3f3f46]">•</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 01 - CHI SONO ================= -->
+        <section id="chi-sono" class="py-20 sm:py-28 border-b border-[#1f1f22]">
+            <div class="max-w-[1140px] mx-auto px-4 sm:px-8">
+
+                <!-- Section Header -->
+                <div class="grid grid-cols-1 md:grid-cols-12 items-baseline gap-4 mb-14">
+                    <div class="md:col-span-4 flex items-center gap-3 font-mono-label text-[11px] uppercase text-[#68686e]">
+                        <span class="w-5 h-[1px] bg-[#3f3f46]"></span>
+                        <span>01 - CHI SONO</span>
+                    </div>
+                    <div class="md:col-span-8">
+                        <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-white leading-tight">
+                            Tra impianti reali e codice.
+                        </h2>
+                    </div>
+                </div>
+
+                <!-- Editorial Profile Card -->
+                <div class="border border-[#1f1f22] bg-[#111113] p-7 sm:p-12">
+                    <div class="flex flex-wrap items-center justify-between gap-2 pb-6 mb-7 border-b border-[#1f1f22]">
+                        <span class="font-display font-bold text-xl text-white">Enrico Biasini · 21 Anni</span>
+                        <span class="font-mono-label text-[11px] uppercase text-[#8e8e96]">PADOVA, ITALIA</span>
+                    </div>
+
+                    <div class="space-y-5 text-base sm:text-lg text-[#b4b4bc] leading-relaxed max-w-4xl">
+                        <p>
+                            Mi chiamo <strong class="text-white font-semibold">Enrico Biasini</strong>, ho 21 anni e vivo a Padova. Dopo aver conseguito il diploma in <strong class="text-white font-semibold">Informatica e Telecomunicazioni</strong> presso l’Istituto Tecnico Industriale <strong class="text-white font-semibold">Francesco Severi</strong> di Padova, ho scelto di portare avanti in parallelo sia il percorso professionale sul campo sia gli studi universitari.
+                        </p>
+                        <p>
+                            Attualmente lavoro presso l’azienda <strong class="text-white font-semibold">Team Building S.r.l.</strong> a Padova come <strong class="text-white font-semibold">System Integrator</strong>, dove mi occupo dello sviluppo di sistemi BMS Schneider Electric, programmazione di domotica KNX, progettazione di interfacce grafiche di supervisione, collaudi in campo e integrazione di dispositivi tramite protocolli Modbus, BACnet e DALI.
+                        </p>
+                        <p>
+                            Nel frattempo frequento il <strong class="text-white font-semibold">terzo anno del corso di Laurea in Informatica</strong> presso l’<strong class="text-white font-semibold">Università degli Studi di Padova (UniPD)</strong>, coniugando l’approccio rigoroso dell’informatica con le esigenze concrete degli impianti tecnologici moderni.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= 02 - ESPERIENZE LAVORATIVE ================= -->
+        <section id="esperienze" class="py-20 sm:py-28 border-b border-[#1f1f22]">
+            <div class="max-w-[1140px] mx-auto px-4 sm:px-8">
+
+                <!-- Section Header -->
+                <div class="grid grid-cols-1 md:grid-cols-12 items-baseline gap-4 mb-14">
+                    <div class="md:col-span-4 flex items-center gap-3 font-mono-label text-[11px] uppercase text-[#68686e]">
+                        <span class="w-5 h-[1px] bg-[#3f3f46]"></span>
+                        <span>02 - ESPERIENZE</span>
+                    </div>
+                    <div class="md:col-span-8">
+                        <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-white leading-tight">
+                            Di cosa mi occupo
+                        </h2>
+                    </div>
+                </div>
+
+                <!-- Main Featured Company Card -->
+                <div class="border border-[#1f1f22] bg-[#121214] p-7 sm:p-12 mb-4">
+                    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                        <h3 class="font-display font-extrabold text-2xl sm:text-3xl text-white">
+                            Team Building S.r.l.
+                        </h3>
+                        <span class="font-mono-label text-[11px] uppercase text-[#9a9aa2]">
+                            SYSTEM INTEGRATOR • ATTUALE
+                        </span>
+                    </div>
+
+                    <p class="text-base sm:text-xl text-[#d4d4d8] leading-relaxed max-w-3xl mb-8">
+                        Progettazione software, configurazione, messa in servizio e supervisione di impianti di Building Automation e domotica avanzata a Padova. Dalla logica di controllo fino all'acquisizione dei dispositivi in campo e al supporto diretto al cliente.
+                    </p>
+
+                    <div class="flex flex-wrap items-center justify-between gap-4 pt-5 border-t border-[#1f1f22] font-mono-label text-[10px] uppercase text-[#8e8e96]">
+                        <span>SEDE OPERATIVA: PADOVA (PD)</span>
+                        <span>SETTORE: BUILDING AUTOMATION &amp; SYSTEM INTEGRATION ↗</span>
+                    </div>
+                </div>
+
+                <!-- 7 Numbered Job Responsibility Rows -->
+                <div class="border-t border-[#1f1f22] divide-y divide-[#1f1f22]">
+
+                    <!-- Row 01 -->
+                    <div class="task-row py-6 px-4 sm:px-6 grid grid-cols-1 md:grid-cols-12 items-center gap-4">
+                        <div class="md:col-span-1 font-mono-label text-xs text-[#68686e] row-number">01</div>
+                        <div class="md:col-span-4">
+                            <h4 class="font-display font-bold text-lg sm:text-xl leading-snug">
+                                Programmazione KNX e Automazione
+                            </h4>
+                        </div>
+                        <div class="md:col-span-5">
+                            <p class="text-xs sm:text-sm text-[#9a9aa2] row-desc leading-relaxed">
+                                Programmazione di impianti di domotica standard KNX e sviluppo di logiche di automazione per edifici.
+                            </p>
+                        </div>
+                        <div class="md:col-span-2 flex items-center justify-between md:justify-end gap-4">
+                            <span class="font-mono-label text-[10px] uppercase text-[#787880] row-tag">DOMOTICA &amp; LOGICA</span>
+                            <span class="text-xs text-[#787880] row-arrow">↗</span>
+                        </div>
+                    </div>
+
+                    <!-- Row 02 -->
+                    <div class="task-row py-6 px-4 sm:px-6 grid grid-cols-1 md:grid-cols-12 items-center gap-4">
+                        <div class="md:col-span-1 font-mono-label text-xs text-[#68686e] row-number">02</div>
+                        <div class="md:col-span-4">
+                            <h4 class="font-display font-bold text-lg sm:text-xl leading-snug">
+                                Sistemi BMS Schneider &amp; Interfacce Grafiche
+                            </h4>
+                        </div>
+                        <div class="md:col-span-5">
+                            <p class="text-xs sm:text-sm text-[#9a9aa2] row-desc leading-relaxed">
+                                Sviluppo di sistemi di supervisione BMS Schneider Electric e creazione di interfacce grafiche HMI intuitive.
+                            </p>
+                        </div>
+                        <div class="md:col-span-2 flex items-center justify-between md:justify-end gap-4">
+                            <span class="font-mono-label text-[10px] uppercase text-[#787880] row-tag">SUPERVISIONE BMS</span>
+                            <span class="text-xs text-[#787880] row-arrow">↗</span>
+                        </div>
+                    </div>
+
+                    <!-- Row 03 -->
+                    <div class="task-row py-6 px-4 sm:px-6 grid grid-cols-1 md:grid-cols-12 items-center gap-4">
+                        <div class="md:col-span-1 font-mono-label text-xs text-[#68686e] row-number">03</div>
+                        <div class="md:col-span-4">
+                            <h4 class="font-display font-bold text-lg sm:text-xl leading-snug">
+                                Messa in Servizio e Testing Software
+                            </h4>
+                        </div>
+                        <div class="md:col-span-5">
+                            <p class="text-xs sm:text-sm text-[#9a9aa2] row-desc leading-relaxed">
+                                Messa in servizio degli impianti e test di validazione del corretto funzionamento del software sviluppato.
+                            </p>
+                        </div>
+                        <div class="md:col-span-2 flex items-center justify-between md:justify-end gap-4">
+                            <span class="font-mono-label text-[10px] uppercase text-[#787880] row-tag">COMMISSIONING</span>
+                            <span class="text-xs text-[#787880] row-arrow">↗</span>
+                        </div>
+                    </div>
+
+                    <!-- Row 04 -->
+                    <div class="task-row py-6 px-4 sm:px-6 grid grid-cols-1 md:grid-cols-12 items-center gap-4">
+                        <div class="md:col-span-1 font-mono-label text-xs text-[#68686e] row-number">04</div>
+                        <div class="md:col-span-4">
+                            <h4 class="font-display font-bold text-lg sm:text-xl leading-snug">
+                                Collaudo e Acquisizione in Campo
+                            </h4>
+                        </div>
+                        <div class="md:col-span-5">
+                            <p class="text-xs sm:text-sm text-[#9a9aa2] row-desc leading-relaxed">
+                                Collaudo funzionale e acquisizione diretta dei dispositivi installati in campo.
+                            </p>
+                        </div>
+                        <div class="md:col-span-2 flex items-center justify-between md:justify-end gap-4">
+                            <span class="font-mono-label text-[10px] uppercase text-[#787880] row-tag">FIELD TESTING</span>
+                            <span class="text-xs text-[#787880] row-arrow">↗</span>
+                        </div>
+                    </div>
+
+                    <!-- Row 05 -->
+                    <div class="task-row py-6 px-4 sm:px-6 grid grid-cols-1 md:grid-cols-12 items-center gap-4">
+                        <div class="md:col-span-1 font-mono-label text-xs text-[#68686e] row-number">05</div>
+                        <div class="md:col-span-4">
+                            <h4 class="font-display font-bold text-lg sm:text-xl leading-snug">
+                                Integrazione Dispositivi Multiprotocollo
+                            </h4>
+                        </div>
+                        <div class="md:col-span-5">
+                            <p class="text-xs sm:text-sm text-[#9a9aa2] row-desc leading-relaxed">
+                                Integrazione di dispositivi, anche di terze parti, tramite interfacce Modbus, BACnet e DALI.
+                            </p>
+                        </div>
+                        <div class="md:col-span-2 flex items-center justify-between md:justify-end gap-4">
+                            <span class="font-mono-label text-[10px] uppercase text-[#787880] row-tag">MODBUS • BACNET • DALI</span>
+                            <span class="text-xs text-[#787880] row-arrow">↗</span>
+                        </div>
+                    </div>
+
+                    <!-- Row 06 -->
+                    <div class="task-row py-6 px-4 sm:px-6 grid grid-cols-1 md:grid-cols-12 items-center gap-4">
+                        <div class="md:col-span-1 font-mono-label text-xs text-[#68686e] row-number">06</div>
+                        <div class="md:col-span-4">
+                            <h4 class="font-display font-bold text-lg sm:text-xl leading-snug">
+                                Supporto Tecnico ai Clienti
+                            </h4>
+                        </div>
+                        <div class="md:col-span-5">
+                            <p class="text-xs sm:text-sm text-[#9a9aa2] row-desc leading-relaxed">
+                                Assistenza tecnica dedicata ai clienti per l'analisi e la risoluzione di problematiche sugli impianti.
+                            </p>
+                        </div>
+                        <div class="md:col-span-2 flex items-center justify-between md:justify-end gap-4">
+                            <span class="font-mono-label text-[10px] uppercase text-[#787880] row-tag">TROUBLESHOOTING</span>
+                            <span class="text-xs text-[#787880] row-arrow">↗</span>
+                        </div>
+                    </div>
+
+                    <!-- Row 07 -->
+                    <div class="task-row py-6 px-4 sm:px-6 grid grid-cols-1 md:grid-cols-12 items-center gap-4 border-b border-[#1f1f22]">
+                        <div class="md:col-span-1 font-mono-label text-xs text-[#68686e] row-number">07</div>
+                        <div class="md:col-span-4">
+                            <h4 class="font-display font-bold text-lg sm:text-xl leading-snug">
+                                Stesura Manuali Operatori
+                            </h4>
+                        </div>
+                        <div class="md:col-span-5">
+                            <p class="text-xs sm:text-sm text-[#9a9aa2] row-desc leading-relaxed">
+                                Redazione di documentazione tecnica e manuali operatori chiari per la gestione degli impianti.
+                            </p>
+                        </div>
+                        <div class="md:col-span-2 flex items-center justify-between md:justify-end gap-4">
+                            <span class="font-mono-label text-[10px] uppercase text-[#787880] row-tag">DOCUMENTAZIONE</span>
+                            <span class="text-xs text-[#787880] row-arrow">↗</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= 03 - FORMAZIONE ================= -->
+        <section id="formazione" class="py-20 sm:py-28 border-b border-[#1f1f22]">
+            <div class="max-w-[1140px] mx-auto px-4 sm:px-8">
+
+                <!-- Section Header -->
+                <div class="grid grid-cols-1 md:grid-cols-12 items-baseline gap-4 mb-14">
+                    <div class="md:col-span-4 flex items-center gap-3 font-mono-label text-[11px] uppercase text-[#68686e]">
+                        <span class="w-5 h-[1px] bg-[#3f3f46]"></span>
+                        <span>03 - FORMAZIONE</span>
+                    </div>
+                    <div class="md:col-span-8">
+                        <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-white leading-tight">
+                            Il mio percorso di studi.
+                        </h2>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <!-- Card 01: UniPD -->
+                    <div class="border border-[#1f1f22] bg-[#111113] p-8 sm:p-10 flex flex-col justify-between hover:border-[#3f3f46] transition">
+                        <div>
+                            <div class="flex items-center justify-between gap-4 mb-10">
+                                <span class="font-mono-label text-xs text-[#68686e]">01</span>
+                                <span class="font-mono-label text-[10px] uppercase px-2.5 py-1 bg-[#f2f2ee] text-[#0a0a0a] font-semibold">
+                                    3° ANNO IN CORSO
+                                </span>
+                            </div>
+
+                            <h3 class="font-display font-extrabold text-2xl sm:text-3xl text-white leading-snug mb-4">
+                                Università degli Studi di Padova (UniPD)
+                            </h3>
+
+                            <p class="text-sm sm:text-base text-[#9a9aa2] leading-relaxed">
+                                Corso di Laurea Triennale in Informatica. Approfondimento di programmazione, algoritmi e strutture dati, architettura degli elaboratori, reti di calcolatori, basi di dati e ingegneria del software.
+                            </p>
+                        </div>
+
+                        <div class="mt-10 pt-5 border-t border-[#1f1f22] flex items-center justify-between font-mono-label text-[10px] uppercase text-[#d4d4d8]">
+                            <span>LAUREA IN INFORMATICA</span>
+                            <span>PADOVA ↗</span>
+                        </div>
+                    </div>
+
+                    <!-- Card 02: ITI Francesco Severi -->
+                    <div class="border border-[#1f1f22] bg-[#111113] p-8 sm:p-10 flex flex-col justify-between hover:border-[#3f3f46] transition">
+                        <div>
+                            <div class="flex items-center justify-between gap-4 mb-10">
+                                <span class="font-mono-label text-xs text-[#68686e]">02</span>
+                                <span class="font-mono-label text-[10px] uppercase px-2.5 py-1 bg-[#f2f2ee] text-[#0a0a0a] font-semibold">
+                                    DIPLOMA
+                                </span>
+                            </div>
+
+                            <h3 class="font-display font-extrabold text-2xl sm:text-3xl text-white leading-snug mb-4">
+                                ITI Francesco Severi · Padova
+                            </h3>
+
+                            <p class="text-sm sm:text-base text-[#9a9aa2] leading-relaxed">
+                                Diploma di Istituto Tecnico Industriale ad indirizzo Informatica e Telecomunicazioni. Solida formazione tecnica su sistemi, reti, elettronica digitale, protocolli di comunicazione e sviluppo software.
+                            </p>
+                        </div>
+
+                        <div class="mt-10 pt-5 border-t border-[#1f1f22] flex items-center justify-between font-mono-label text-[10px] uppercase text-[#d4d4d8]">
+                            <span>INFORMATICA E TELECOMUNICAZIONI</span>
+                            <span>PADOVA ↗</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= 04 - COMPETENZE TECNICHE ================= -->
+        <section id="competenze" class="py-20 sm:py-28 border-b border-[#1f1f22]">
+            <div class="max-w-[1140px] mx-auto px-4 sm:px-8">
+
+                <!-- Section Header -->
+                <div class="grid grid-cols-1 md:grid-cols-12 items-baseline gap-4 mb-14">
+                    <div class="md:col-span-4 flex items-center gap-3 font-mono-label text-[11px] uppercase text-[#68686e]">
+                        <span class="w-5 h-[1px] bg-[#3f3f46]"></span>
+                        <span>04 - COMPETENZE</span>
+                    </div>
+                    <div class="md:col-span-8">
+                        <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-white leading-tight">
+                            Tecnologie, protocolli e strumenti.
+                        </h2>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                    <!-- Skill Group 01 -->
+                    <div class="border border-[#1f1f22] bg-[#111113] p-7 sm:p-8 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-6">
+                                <span class="font-mono-label text-xs text-[#68686e]">01</span>
+                                <span class="font-mono-label text-[10px] uppercase text-[#8e8e96]">AUTOMATION</span>
+                            </div>
+                            <h3 class="font-display font-bold text-xl text-white mb-3">
+                                Building Automation &amp; BMS
+                            </h3>
+                            <p class="text-sm text-[#9a9aa2] leading-relaxed mb-6">
+                                Sviluppo logiche di automazione, supervisione impianti tecnologici e realizzazione di pagine grafiche HMI.
+                            </p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 pt-5 border-t border-[#1f1f22]">
+                            <span class="font-mono-label text-[10px] uppercase px-2.5 py-1.5 border border-[#2a2a2e] bg-[#0a0a0a] text-[#e4e4e7]">BMS SCHNEIDER ELECTRIC</span>
+                            <span class="font-mono-label text-[10px] uppercase px-2.5 py-1.5 border border-[#2a2a2e] bg-[#0a0a0a] text-[#e4e4e7]">SCADA / HMI</span>
+                            <span class="font-mono-label text-[10px] uppercase px-2.5 py-1.5 border border-[#2a2a2e] bg-[#0a0a0a] text-[#e4e4e7]">LOGICHE DI CONTROLLO</span>
+                        </div>
+                    </div>
+
+                    <!-- Skill Group 02 -->
+                    <div class="border border-[#1f1f22] bg-[#111113] p-7 sm:p-8 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-6">
+                                <span class="font-mono-label text-xs text-[#68686e]">02</span>
+                                <span class="font-mono-label text-[10px] uppercase text-[#8e8e96]"> KNX &amp; FIELD BUS</span>
+                            </div>
+                            <h3 class="font-display font-bold text-xl text-white mb-3">
+                                Domotica, Protocolli &amp; Integrazione
+                            </h3>
+                            <p class="text-sm text-[#9a9aa2] leading-relaxed mb-6">
+                                Programmazione di domotica KNX, acquisizione dati e integrazione di apparati multivendor in campo su bus seriali e reti IP.
+                            </p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 pt-5 border-t border-[#1f1f22]">
+                            <span class="font-mono-label text-[10px] uppercase px-2.5 py-1.5 border border-[#2a2a2e] bg-[#0a0a0a] text-[#e4e4e7]">DOMOTICA KNX</span>
+                            <span class="font-mono-label text-[10px] uppercase px-2.5 py-1.5 border border-[#2a2a2e] bg-[#0a0a0a] text-[#e4e4e7]">MODBUS RTU / TCP</span>
+                            <span class="font-mono-label text-[10px] uppercase px-2.5 py-1.5 border border-[#2a2a2e] bg-[#0a0a0a] text-[#e4e4e7]">BACNET IP / MSTP</span>
+                            <span class="font-mono-label text-[10px] uppercase px-2.5 py-1.5 border border-[#2a2a2e] bg-[#0a0a0a] text-[#e4e4e7]">DALI LIGHTING</span>
+                            
+                        </div>
+                    </div>
+
+                    <!-- Skill Group 03 -->
+                    <div class="border border-[#1f1f22] bg-[#111113] p-7 sm:p-8 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-6">
+                                <span class="font-mono-label text-xs text-[#68686e]">03</span>
+                                <span class="font-mono-label text-[10px] uppercase text-[#8e8e96]">CODE</span>
+                            </div>
+                            <h3 class="font-display font-bold text-xl text-white mb-3">
+                                Programmazione &amp; RETI
+                            </h3>
+                            <p class="text-sm text-[#9a9aa2] leading-relaxed mb-6">
+                                <p class="text-sm text-[#9a9aa2] leading-relaxed mb-1" >C ; C++ ; Java ; HTML ; PHP ; Python ; SQL</p>
+                                <p class="text-sm text-[#9a9aa2] leading-relaxed mb-1" >Reti di Calcolatori.</p>
+                                <p class="text-sm text-[#9a9aa2] leading-relaxed mb-1" >Algoritmi e strutture dati</p>
+                                <p class="text-sm text-[#9a9aa2] leading-relaxed mb-1" >Basi di dati</p>
+                                <p class="text-sm text-[#9a9aa2] leading-relaxed mb-6" >Ingegneria del software</p>
+                            </p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 pt-5 border-t border-[#1f1f22]">
+                            <span class="font-mono-label text-[10px] uppercase px-2.5 py-1.5 border border-[#2a2a2e] bg-[#0a0a0a] text-[#e4e4e7]">PROGRAMMAZIONE &amp; ALGORITMI</span>
+                            <span class="font-mono-label text-[10px] uppercase px-2.5 py-1.5 border border-[#2a2a2e] bg-[#0a0a0a] text-[#e4e4e7]">RETI DI CALCOLATORI</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= 05 - PROGETTI ================= -->
+        <section id="progetti" class="py-20 sm:py-28 border-b border-[#1f1f22]">
+            <div class="max-w-[1140px] mx-auto px-4 sm:px-8">
+
+                <!-- Section Header -->
+                <div class="grid grid-cols-1 md:grid-cols-12 items-baseline gap-4 mb-14">
+                    <div class="md:col-span-4 flex items-center gap-3 font-mono-label text-[11px] uppercase text-[#68686e]">
+                        <span class="w-5 h-[1px] bg-[#3f3f46]"></span>
+                        <span>05 - PROGETTI</span>
+                    </div>
+                    <div class="md:col-span-8">
+                        <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-white leading-tight">
+                            Progetti e realizzazioni.
+                        </h2>
+                    </div>
+                </div>
+
+                <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <!-- Project 01 -->
+                    <div class="border border-[#1f1f22] bg-[#111113] p-8 sm:p-10 flex flex-col justify-between hover:border-[#3f3f46] transition">
+                        <div>
+                            <div class="flex items-center justify-between gap-4 mb-10">
+                                <span class="font-mono-label text-xs text-[#68686e]">01</span>
+                                <span class="font-mono-label text-[10px] uppercase px-2.5 py-1 bg-[#f2f2ee] text-[#0a0a0a] font-semibold">
+                                    BMS &amp; INTEGRAZIONE
+                                </span>
+                            </div>
+
+                            <h3 class="font-display font-extrabold text-2xl text-white leading-snug mb-3">
+                                Supervisione BMS Schneider e Integrazione Multiprotocollo
+                            </h3>
+
+                            <p class="text-sm sm:text-base text-[#9a9aa2] leading-relaxed">
+                                Sviluppo di pagine grafiche di supervisione, acquisizione di dispositivi in campo tramite Modbus, BACnet e DALI, collaudo funzionale e stesura del manuale operatore finale per la gestione dell'impianto.
+                            </p>
+                        </div>
+
+                        <div class="mt-10 pt-5 border-t border-[#1f1f22] flex items-center justify-between font-mono-label text-[10px] uppercase text-[#8e8e96]">
+                            <span>SCHNEIDER • MODBUS • BACNET • DALI</span>
+                        </div>
+                    </div>
+
+                    <!-- Project 02 -->
+                    <div class="border border-[#1f1f22] bg-[#111113] p-8 sm:p-10 flex flex-col justify-between hover:border-[#3f3f46] transition">
+                        <div>
+                            <div class="flex items-center justify-between gap-4 mb-10">
+                                <span class="font-mono-label text-xs text-[#68686e]">02</span>
+                                <span class="font-mono-label text-[10px] uppercase px-2.5 py-1 bg-[#f2f2ee] text-[#0a0a0a] font-semibold">
+                                    UNIPD &amp; SOFTWARE
+                                </span>
+                            </div>
+
+                            <h3 class="font-display font-extrabold text-2xl text-white leading-snug mb-3">
+                                Progetti Accademici Informatica UniPD
+                            </h3>
+
+                            <p class="text-sm sm:text-base text-[#9a9aa2] leading-relaxed">
+                                Sviluppo di progetti software nell'ambito del corso di Laurea in Informatica presso l'Università degli Studi di Padova: programmazione ad oggetti, database relazionale, ingegnerie del software, metodi e tecnologie per lo sviluppo software, calcolo numerico, tecnologie web.
+                            </p>
+                        </div>
+
+                        <div class="mt-10 pt-5 border-t border-[#1f1f22] flex items-center justify-between font-mono-label text-[10px] uppercase text-[#8e8e96]">
+                            <span>UNIVERSITÀ DEGLI STUDI DI PADOVA</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= 06 - CONTATTI & FOOTER ================= -->
+        <section id="contatti" class="pt-20 sm:pt-24">
+            <div class="max-w-[1140px] mx-auto px-4 sm:px-8 pb-20">
+
+                <!-- Section Header -->
+                <div class="grid grid-cols-1 md:grid-cols-12 items-baseline gap-4 mb-12">
+                    <div class="md:col-span-4 flex items-center gap-3 font-mono-label text-[11px] uppercase text-[#68686e]">
+                        <span class="w-5 h-[1px] bg-[#3f3f46]"></span>
+                        <span>06 - CONTATTI</span>
+                    </div>
+                    <div class="md:col-span-8">
+                        <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-white leading-tight">
+                            Riferimenti diretti.
+                        </h2>
+                    </div>
+                </div>
+
+                <!-- 4-Cell Bordered Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-t border-l border-[#1f1f22]">
+
+                    <!-- Cell 1: LinkedIn -->
+                    <a href="https://www.linkedin.com/in/enrico-biasini-38a989318/" target="_blank" rel="noopener noreferrer" class="border-r border-b border-[#1f1f22] bg-[#0e0e10] hover:bg-[#f2f2ee] hover:text-[#0a0a0a] p-6 flex items-center justify-between transition group">
+                        <div class="flex items-center gap-3">
+                            <span class="font-mono-label font-bold text-xs">in</span>
+                            <span class="font-mono-label text-[11px] uppercase">LINKEDIN</span>
+                        </div>
+                        <span class="text-xs text-[#68686e] group-hover:text-[#0a0a0a]">↗</span>
+                    </a>
+
+                    <!-- Cell 2: Copy Email -->
+                    <button onclick="copyEmailAddress()" class="border-r border-b border-[#1f1f22] bg-[#0e0e10] hover:bg-[#f2f2ee] hover:text-[#0a0a0a] p-6 flex items-center justify-between transition group text-left w-full">
+                        <div class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="w-3.5 h-3.5"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect></svg>
+                            <span class="font-mono-label text-[11px] uppercase">EMAIL (COPIA INDIRIZZO)</span>
+                        </div>
+                        <span class="text-xs text-[#68686e] group-hover:text-[#0a0a0a]">↗</span>
+                    </button>
+
+                    <!-- Cell 3: Location -->
+                    <div class="border-r border-b border-[#1f1f22] bg-[#0e0e10] p-6 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="w-3.5 h-3.5 text-[#8e8e96]"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            <span class="font-mono-label text-[11px] uppercase text-[#d4d4d8]">PADOVA, ITALIA</span>
+                        </div>
+                        <span class="text-xs text-[#68686e]">•</span>
+                    </div>
+
+                    <!-- Cell 4: University -->
+                    <a href="#formazione" class="border-r border-b border-[#1f1f22] bg-[#0e0e10] hover:bg-[#f2f2ee] hover:text-[#0a0a0a] p-6 flex items-center justify-between transition group">
+                        <div class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="w-3.5 h-3.5"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg>
+                            <span class="font-mono-label text-[11px] uppercase">UNIPD • INFORMATICA</span>
+                        </div>
+                        <span class="text-xs text-[#68686e] group-hover:text-[#0a0a0a]">↑</span>
+                    </a>
+
+                </div>
+            </div>
+
+            <!-- Expandable Accordion Bar -->
+            <div class="border-t border-b border-[#1f1f22] bg-[#0c0c0e]">
+                <div class="max-w-[1140px] mx-auto px-4 sm:px-8">
+                    <button onclick="toggleSummaryAccordion()" class="w-full py-6 flex items-center justify-between text-left font-mono-label text-[11px] uppercase text-[#8e8e96] hover:text-white transition">
+                        <span>RIEPILOGO RAPIDO SU ENRICO BIASINI</span>
+                        <span id="accordion-symbol" class="text-base leading-none">+</span>
+                    </button>
+                    <div id="summary-accordion-body" class="hidden pb-8 pt-2 border-t border-[#1f1f22] text-sm text-[#9a9aa2] grid grid-cols-1 sm:grid-cols-3 gap-6">
+                        <div>
+                            <div class="font-mono-label text-[10px] uppercase text-[#68686e] mb-1">RUOLO ATTUALE</div>
+                            <p class="text-white font-medium">System Integrator presso Team Building S.r.l. (Padova)</p>
+                        </div>
+                        <div>
+                            <div class="font-mono-label text-[10px] uppercase text-[#68686e] mb-1">ISTRUZIONE</div>
+                            <p class="text-white font-medium">3° Anno Informatica UniPD · Diploma ITI Francesco Severi Padova</p>
+                        </div>
+                        <div>
+                            <div class="font-mono-label text-[10px] uppercase text-[#68686e] mb-1">TECNOLOGIE CHIAVE</div>
+                            <p class="text-white font-medium">BMS Schneider Electric, KNX, Modbus, BACnet, DALI</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Minimal Footer -->
+            <footer class="py-16 bg-[#0a0a0a]">
+                <div class="max-w-[1140px] mx-auto px-4 sm:px-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
+                    <div class="max-w-sm space-y-4">
+                        <div class="w-7 h-7 border border-[#2e2e32] bg-[#121214] flex items-center justify-center font-display font-extrabold text-xs text-white">
+                            B
+                        </div>
+                        <p class="text-xs text-[#8e8e96] leading-relaxed">
+                            Enrico Biasini — System Integrator presso Team Building S.r.l. e studente di Informatica presso l'Università degli Studi di Padova.
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col sm:items-end gap-2 text-xs text-[#8e8e96]">
+                        <span class="font-mono-label text-[10px] uppercase text-[#68686e] mb-1">NAVIGAZIONE</span>
+                        <a href="#chi-sono" class="hover:text-white transition">Chi Sono</a>
+                        <a href="#esperienze" class="hover:text-white transition">Esperienze</a>
+                        <a href="#formazione" class="hover:text-white transition">Formazione</a>
+                        <a href="https://www.linkedin.com/in/enrico-biasini-38a989318/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition">LinkedIn ↗</a>
+                    </div>
+                </div>
+
+                <div class="max-w-[1140px] mx-auto px-4 sm:px-8 mt-12 pt-8 border-t border-[#1f1f22] flex flex-wrap items-center justify-between gap-4 text-[11px] text-[#68686e]">
+                    <span>© 2026 Enrico Biasini · Padova, Italia</span>
+                    <span class="font-mono-label text-[10px] uppercase">BUILDING AUTOMATION &amp; COMPUTER SCIENCE</span>
+                </div>
+            </footer>
+        </section>
+    </main>
+
+    <script>
+        // Live clock for Padova (Europe/Rome)
+        function updatePadovaClock() {
+            const clockEl = document.getElementById('live-clock');
+            if (!clockEl) return;
+            clockEl.textContent = new Date().toLocaleTimeString('it-IT', {
+                timeZone: 'Europe/Rome',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+        }
+        updatePadovaClock();
+        setInterval(updatePadovaClock, 1000);
+
+        // Toast helper
+        let toastTimer;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = message;
+            toast.classList.remove('hidden');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.add('hidden'), 2600);
+        }
+
+        // Copy email to clipboard
+        function copyEmailAddress() {
+            const email = 'enrico.biasini97@gmail.com';
+
+            function fallbackCopy() {
+                const tempInput = document.createElement('textarea');
+                tempInput.value = email;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+            }
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(email).catch(fallbackCopy);
+            } else {
+                fallbackCopy();
+            }
+            showToast('INDIRIZZO EMAIL COPIATO: ' + email);
+        }
+
+        // Accordion toggle
+        function toggleSummaryAccordion() {
+            const body = document.getElementById('summary-accordion-body');
+            const symbol = document.getElementById('accordion-symbol');
+            const isHidden = body.classList.toggle('hidden');
+            symbol.textContent = isHidden ? '+' : '−';
+        }
+    </script>
+
+</body>
+</html>
